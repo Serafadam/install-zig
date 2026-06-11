@@ -29,7 +29,7 @@ echo "Using temporary directory: $TMP_DIR"
 trap cleanup EXIT
 
 # Check if Zig is installed and at least version 0.13.0
-ZIG_REQUIRED_VERSION="0.17.0"
+ZIG_REQUIRED_VERSION= curl -sL https://ziglang.org/download/index.json | grep -oP '"version": "\K[^"]+' | grep '\-dev' | sort -V | tail -n 1
 
 # Function to check zig version
 check_zig_version() {
