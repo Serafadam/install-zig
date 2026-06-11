@@ -128,11 +128,10 @@ else
     esac
 
     # grab the zig binary package from the official url
-    DIR_PREFIX = "builds"
+    DIR_PREFIX="builds"
     if [ "$INSTALL_STABLE" = true ]; then
         DIR_PREFIX="download/${ZIG_REQUIRED_VERSION}"
     fi
-        
     ZIG_ARCHIVE_NAME="zig-${ARCH}-linux-${ZIG_REQUIRED_VERSION}.tar.xz"
     ZIG_URL="https://ziglang.org/${DIR_PREFIX}/${ZIG_ARCHIVE_NAME}"
     echo "Attempting to download Zig from: $ZIG_URL using $DOWNLOADER..."
