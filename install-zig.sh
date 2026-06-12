@@ -35,16 +35,37 @@ for arg in "$@"; do
     fi
 done
 
-# Fetch the latest version from index.json
-if [ "$INSTALL_STABLE" = true ]; then
-    ZIG_REQUIRED_VERSION=$(curl -sL https://ziglang.org/download/index.json | grep -oP '"version": "\K[^"]+' | grep -v '\-dev' | sort -V | tail -n 1)
+DOWNLOADER=""
+if command -v wget &> /dev/null; then
+    DOWNLOADER="wget"
+elif command -v curl &> /dev/null; then
+    DOWNLOADER="curl"
 else
-    ZIG_REQUIRED_VERSION=$(curl -sL https://ziglang.org/download/index.json | grep -oP '"version": "\K[^"]+' | grep '\-dev' | sort -V | tail -n 1)
-fi
-
-if [ -z "$ZIG_REQUIRED_VERSION" ]; then
-    echo "ERROR: Failed to fetch Zig version from index.json."
+    echo "ERROR: Neither 'wget' nor 'curl' is installed. Please install one of them manually or ensure it's in your PATH."
     exit 1
+fi
+# Fetch the latest version from index.json
+stable_flag=""
+if [ "$INSTALL_STABLE" = true ]; then
+    stable_flag="-v"
+else
+    stable_flag=""
+fi
+if [ "$DOWNLOADER" = "wget" ]; then
+        ZIG_REQUIRED_VERSION=$(wget -qO- https://ziglang.org/download/index.json | grep -oP '"version": "\K[^"]+' | grep $stable_flag '\-dev' | sort -V | tail -n 1)
+
+    if [ -z "$ZIG_REQUIRED_VERSION" ]; then
+        echo "ERROR: Failed to fetch Zig version from index.json."
+        exit 1
+    fi
+else
+    d
+        ZIG_REQUIRED_VERSION=$(curl -sL https://ziglang.org/download/index.json | grep -oP '"version": "\K[^"]+' | grep $stable_flag '\-dev' | sort -V | tail -n 1)
+
+    if [ -z "$ZIG_REQUIRED_VERSION" ]; then
+        echo "ERROR: Failed to fetch Zig version from index.json."
+        exit 1
+    fi
 fi
 
 echo "Installing Zig version: $ZIG_REQUIRED_VERSION"
@@ -109,15 +130,6 @@ else
     cd "$TMP_DIR" || exit 1
 
     # Determine which download tool is available (wget or curl)
-    DOWNLOADER=""
-    if command -v wget &> /dev/null; then
-        DOWNLOADER="wget"
-    elif command -v curl &> /dev/null; then
-        DOWNLOADER="curl"
-    else
-        echo "ERROR: Neither 'wget' nor 'curl' is installed. Please install one of them manually or ensure it's in your PATH."
-        exit 1
-    fi
 
     # Detect system architecture
     ARCH=$(uname -m)
