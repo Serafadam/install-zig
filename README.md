@@ -11,12 +11,24 @@
 
 Make sure your system has `sudo`, `git` and either `wget` or `curl` to begin. Next, run the following code below to install.
 
+Installing stable (curl)
 ```bash
-git clone https://github.com/MingFei2001/install-zig.git
-cd install-zig
-bash ./install-zig.sh
+curl https://raw.githubusercontent.com/Serafadam/install-zig/refs/heads/main/install-zig.sh  | bash -s -- --stable
+```
+Installing stable (wget)
+```bash
+wget https://raw.githubusercontent.com/Serafadam/install-zig/refs/heads/main/install-zig.sh -O - | bash -s -- --stable
 ```
 
+Installing latest (curl)
+```bash
+curl https://raw.githubusercontent.com/Serafadam/install-zig/refs/heads/main/install-zig.sh  | bash -s -- --stable
+```
+
+Installing stable (wget)
+```bash
+wget https://raw.githubusercontent.com/Serafadam/install-zig/refs/heads/main/install-zig.sh -O - | bash 
+```
 ## 📦 What it installs
 
 - Latest Zig version to `/usr/local/zig/`
